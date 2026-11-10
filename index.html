@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Translator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <button id="darkModeBtn" onclick="toggleDarkMode()">
+        🌙 Dark Mode
+    </button>
+
+    <main class="container">
+
+        <h1>🌍 Language Translator</h1>
+        <p>Break language barriers. Translate with ease!</p>
+
+        <div class="language-selection">
+
+            <div>
+                <label for="sourceLanguage">Translate from</label>
+                <select id="sourceLanguage">
+                    <option value="en">English</option>
+                    <option value="de">German</option>
+                    <option value="hi">Hindi</option>
+                    <option value="kn">Kannada</option>
+                    <option value="fr">French</option>
+                    <option value="es">Spanish</option>
+                    <option value="ta">Tamil</option>
+                    <option value="te">Telugu</option>
+                </select>
+            </div>
+
+            <button id="swapBtn" onclick="swapLanguages()" title="Swap languages">
+                ⇄
+            </button>
+
+            <div>
+                <label for="targetLanguage">Translate to</label>
+                <select id="targetLanguage">
+                    <option value="de">German</option>
+                    <option value="en">English</option>
+                    <option value="hi">Hindi</option>
+                    <option value="kn">Kannada</option>
+                    <option value="fr">French</option>
+                    <option value="es">Spanish</option>
+                    <option value="ta">Tamil</option>
+                    <option value="te">Telugu</option>
+                </select>
+            </div>
+
+        </div>
+
+        <label for="inputText">Enter your text</label>
+
+       <textarea
+    id="inputText"
+    maxlength="5000"
+    placeholder="Type something to translate..."
+></textarea>
+
+<p id="charCount">0 / 5000 characters</p>
+
+        <div class="action-buttons">
+
+            <button onclick="startVoiceInput()">
+                🎤 Speak
+            </button>
+
+            <button id="translateBtn" onclick="translateText()">
+                🌐 Translate
+            </button>
+
+            <button id="clearBtn" onclick="clearText()">
+                🗑️ Clear
+            </button>
+
+        </div>
+
+        <h3>Translated Text</h3>
+
+        <div id="translatedText" aria-live="polite">
+            Your translated text will appear here...
+        </div>
+
+        <div class="action-buttons">
+
+            <button id="copyBtn" onclick="copyText()">
+                📋 Copy Translation
+            </button>
+
+            <button onclick="speakText()">
+                🔊 Listen
+            </button>
+
+        </div>
+
+        <footer>
+            <p>Made with ❤️ using HTML, CSS and JavaScript</p>
+        </footer>
+
+        <section class="history-section">
+            <h2>Recent Translations</h2>
+
+    <input
+        type="text"
+        id="historySearch"
+        placeholder="Search translation history..."
+        oninput="searchHistory()"
+    
+    >
+    
+    <div id="translationHistory">
+        <p>No translations yet.</p>
+    </div>
+    <button onclick="clearHistory()">Clear History</button>
+    <button onclick="exportHistory()">Export History</button>
+    <button onclick="exportHistoryCSV()">Export as CSV</button>
+</section>
+<button id="backToTop" onclick="window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+})">
+    ↑ Back to Top
+</button>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
