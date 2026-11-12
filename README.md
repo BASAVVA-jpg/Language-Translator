@@ -68,3 +68,13 @@ This project was developed to practice frontend development, backend integration
 
 Developed as a Computer Science Engineering student project.
 
+## 📸 Screenshots
+
+### 1. Main Translator
+![Main Translator](translator-main.png.png)
+
+### 2. Translation History
+![Translation History](translation-history.png.png)
+
+### 3. Dark Mode
+![Dark Mode](dark-mode.png.png)
