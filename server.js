@@ -7,12 +7,13 @@ const app = express();
 app.use(express.json({ limit: "20kb" }));
 app.use(express.static(__dirname));
 
-// TRANSLATION ROUTE - MyMemory
+
+// TRANSLATION ROUTE - LibreTranslate
 app.post("/translate", async (req, res) => {
     const { text, sourceLanguage, targetLanguage } = req.body;
 
     const supportedLanguages = [
-        "en", "de", "hi", "kn", "fr", "es", "ta", "te"
+        "en", "de", "hi", "fr", "es"
     ];
 
     if (
@@ -23,7 +24,7 @@ app.post("/translate", async (req, res) => {
         !supportedLanguages.includes(targetLanguage)
     ) {
         return res.status(400).json({
-            error: "Invalid text or language."
+            error: "Invalid text or unsupported language."
         });
     }
 
@@ -32,67 +33,45 @@ app.post("/translate", async (req, res) => {
     }
 
     try {
-        function splitIntoChunks(input, maxBytes = 450) {
-            const chunks = [];
-            let current = "";
-
-            for (const char of input) {
-                if (
-                    Buffer.byteLength(current + char, "utf8") > maxBytes
-                ) {
-                    if (current) chunks.push(current);
-                    current = "";
-                }
-
-                current += char;
+        const response = await fetch(
+            "https://libretranslate.rovaspace.com/translate",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    q: text.trim(),
+                    source: sourceLanguage,
+                    target: targetLanguage,
+                    format: "text"
+                })
             }
+        );
 
-            if (current) chunks.push(current);
-            return chunks;
-        }
+        const data = await response.json();
 
-        const chunks = splitIntoChunks(text.trim());
-        const translatedParts = [];
+        if (!response.ok || !data.translatedText) {
+            console.error("Translation error:", data);
 
-        for (const chunk of chunks) {
-            const params = new URLSearchParams({
-                q: chunk,
-                langpair: `${sourceLanguage}|${targetLanguage}`
+            return res.status(502).json({
+                error: data.error || "Translation failed."
             });
-
-            const response = await fetch(
-                `https://api.mymemory.translated.net/get?${params}`
-            );
-
-            if (!response.ok) {
-                throw new Error(`API error: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            if (
-                data.responseStatus !== 200 ||
-                !data.responseData?.translatedText
-            ) {
-                return res.status(502).json({
-                    error: data.responseDetails || "Translation failed."
-                });
-            }
-
-            translatedParts.push(data.responseData.translatedText);
         }
 
         res.json({
-            translatedText: translatedParts.join("").trim()
+            translatedText: data.translatedText.trim()
         });
 
     } catch (error) {
-    console.error("Translation error:", error);
+        console.error("Translation error:", error);
+
         res.status(500).json({
             error: "Unable to connect to translation service."
         });
     }
 });
+
 
 // SERVER TEST
 app.get("/test", (req, res) => {
