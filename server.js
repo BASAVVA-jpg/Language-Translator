@@ -87,8 +87,7 @@ app.post("/translate", async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Translation error:", error.message);
-
+    console.error("Translation error:", error);
         res.status(500).json({
             error: "Unable to connect to translation service."
         });
